@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweet Shop POS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section id="loginScreen" class="login-screen">
+      <div class="login-card">
+        <p class="eyebrow">Ramesh sweets</p>
+        <h1>Ramesh sweets</h1>
+        <p class="muted">Choose how you want to enter the system.</p>
+        <div id="loginMessage" class="login-message" hidden></div>
+        <div class="login-actions">
+          <section class="login-option">
+            <h2>Admin</h2>
+            <label>
+              Password
+              <input id="adminPassword" type="password" placeholder="Enter admin password" />
+            </label>
+            <button id="loginAdmin" class="button accent" type="button">Login As Admin</button>
+          </section>
+          <section class="login-option">
+            <h2>Cashier</h2>
+            <label>
+              Password
+              <input id="cashierPassword" type="password" placeholder="Enter cashier password" />
+            </label>
+            <button id="loginCashier" class="ghost-button login-ghost" type="button">Login As Cashier</button>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <div id="appLayout" class="layout">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Counter POS</p>
+          <div class="title-row">
+            <h1>Ramesh sweets</h1>
+            <button id="logoutButton" class="ghost-button" type="button">Logout</button>
+          </div>
+          <p class="muted">
+            Fast billing for sweets, snacks, gift boxes, and festival orders.
+          </p>
+          <p id="userRole" class="pill role-pill"></p>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Navigation</h2>
+          </div>
+            <div class="sidebar-categories">
+              <button id="posNavRecentOrders" class="filter-button" type="button">Recent Orders</button>
+              <button id="posLowStock" class="filter-button" type="button">Low Stock</button>
+              <button id="posExpense" class="filter-button" type="button">Expense</button>
+              <button id="posStockTransfer" class="filter-button notify-button" type="button">
+                <span>Stock Receive</span>
+                <span id="posStockTransferCount" class="notification-pill" hidden>0</span>
+              </button>
+              <button id="posStockReceiveHistory" class="filter-button" type="button">Stock Receive History</button>
+            </div>
+          </section>
+
+      </aside>
+
+      <main class="main">
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Today at a glance</p>
+            <div class="stats" id="stats"></div>
+          </div>
+          <div class="search-wrap">
+            <label class="search">
+              <span>Search catalog</span>
+              <input id="searchInput" type="search" placeholder="Search sweets, snacks, boxes..." />
+            </label>
+          </div>
+        </section>
+
+        <section class="catalog-section">
+          <div class="section-header">
+            <h2>Catalog</h2>
+            <div class="filter-pills" id="categoryFilters"></div>
+          </div>
+          <div id="catalog" class="catalog"></div>
+        </section>
+      </main>
+
+      <aside class="cart-pane">
+        <section class="panel bill-panel">
+          <div class="panel-header">
+            <h2>Current Bill</h2>
+            <button id="clearCart" class="ghost-button" type="button">Clear</button>
+          </div>
+
+          <label>
+            Customer name
+            <input id="customerName" type="text" placeholder="Walk-in customer" />
+          </label>
+
+          <div id="cartItems" class="cart-items empty-state">
+            Add products to start billing.
+          </div>
+
+          <div class="stack totals-stack">
+            <div class="grid two">
+              <label>
+                Discount
+                <input id="discount" type="number" min="0" step="0.01" value="0" />
+              </label>
+              <label>
+                Tax %
+                <input id="taxRate" type="number" min="0" step="0.01" value="5" />
+              </label>
+            </div>
+
+            <label>
+              Payment method
+              <select id="paymentMethod">
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="UPI">UPI</option>
+                <option value="Credit">Credit</option>
+                <option value="Split Bill">Split Bill</option>
+              </select>
+            </label>
+
+            <div id="splitPaymentSection" class="summary" hidden>
+              <div class="panel-header">
+                <h3>Split Bill</h3>
+              </div>
+              <div class="grid two">
+                <label>
+                  Cash
+                  <input id="splitCash" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label>
+                  Card
+                  <input id="splitCard" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label>
+                  UPI
+                  <input id="splitUpi" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label>
+                  Credit
+                  <input id="splitCredit" type="number" min="0" step="0.01" value="0" />
+                </label>
+              </div>
+              <div id="splitPaymentSummary" class="summary"></div>
+            </div>
+
+            <div class="summary" id="summary"></div>
+            <button id="checkoutButton" class="button accent" type="button">Complete Sale</button>
+          </div>
+        </section>
+
+        <section id="recentOrdersPanel" class="panel history-panel">
+          <div class="panel-header">
+            <h2>Recent Orders</h2>
+          </div>
+          <div id="orderHistory" class="history-list"></div>
+        </section>
+
+      </aside>
+    </div>
+
+    <div id="adminLayout" class="layout admin-layout">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Admin Dashboard</p>
+          <div class="title-row">
+            <h1>Ramesh sweets</h1>
+            <button id="adminLogoutButton" class="ghost-button" type="button">Logout</button>
+          </div>
+          <p class="muted">Overview of sales, payments, and recent orders.</p>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Quick Actions</h2>
+          </div>
+          <div class="sidebar-categories">
+            <button id="adminViewPos" class="filter-button" type="button">Open POS</button>
+            <button id="adminMenu" class="filter-button" type="button">Menu</button>
+            <button id="adminLowStock" class="filter-button" type="button">Low Stock</button>
+            <button id="adminStockTransfer" class="filter-button" type="button">Stock Transfer</button>
+            <button id="adminBackup" class="filter-button" type="button">Backup Database</button>
+            <button id="adminRestore" class="filter-button" type="button">Restore Database</button>
+            <input id="adminRestoreFile" type="file" accept=".sql,.txt" hidden />
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Network Access</h2>
+          </div>
+          <div id="serverInfo" class="summary"></div>
+        </section>
+
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Business Snapshot</p>
+            <label class="search">
+              <span>Filter by date</span>
+              <input id="adminDateFilter" type="date" />
+            </label>
+            <div class="stats" id="adminStats"></div>
+          </div>
+        </section>
+
+        <section class="catalog-section">
+          <div class="section-header">
+            <h2>Payment Breakdown</h2>
+          </div>
+          <div id="adminPayments" class="admin-grid"></div>
+        </section>
+
+      </main>
+
+      <aside class="cart-pane">
+        <section class="panel history-panel">
+          <div class="panel-header">
+            <h2>Recent Orders</h2>
+          </div>
+          <div id="adminOrders" class="history-list"></div>
+        </section>
+
+      </aside>
+    </div>
+
+    <dialog id="receiptDialog" class="receipt-dialog">
+      <article id="receiptContent" class="receipt"></article>
+      <div class="receipt-actions">
+        <button id="printReceipt" class="button accent" type="button">Print Receipt</button>
+        <button id="closeReceipt" class="ghost-button" type="button">Close</button>
+      </div>
+    </dialog>
+
+    <dialog id="confirmationDialog" class="receipt-dialog confirmation-dialog">
+      <article id="confirmationContent" class="receipt confirmation-content"></article>
+      <div class="receipt-actions">
+        <button id="confirmationPrint" class="button accent" type="button">Print Receipt</button>
+        <button id="confirmationClose" class="ghost-button" type="button">Back To POS</button>
+      </div>
+    </dialog>
+
+    <dialog id="addItemDialog" class="receipt-dialog item-dialog">
+      <form id="addItemForm" class="receipt item-form" method="dialog">
+        <div class="panel-header">
+          <h2>Add Item</h2>
+          <button id="cancelAddItem" class="ghost-button" type="button">Close</button>
+        </div>
+        <p id="selectedProductText" class="muted"></p>
+        <div class="grid two">
+          <label>
+            Amount
+            <input id="dialogAmount" type="number" min="0.01" step="0.01" required />
+          </label>
+          <label>
+            Quantity
+            <input id="dialogQuantity" type="number" min="0.0001" step="0.0001" required />
+          </label>
+        </div>
+        <div class="summary">
+          <div class="summary-row">
+            <span>Calculated quantity</span>
+            <strong id="calculatedQuantity">0</strong>
+          </div>
+        </div>
+        <div class="receipt-actions">
+          <button class="button accent" type="submit">Add To Bill</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="stockTransferDialog" class="receipt-dialog item-dialog">
+      <form id="stockTransferForm" class="receipt item-form" method="dialog">
+        <div class="panel-header">
+          <h2>Stock Transfer</h2>
+          <button id="cancelStockTransfer" class="ghost-button" type="button">Close</button>
+        </div>
+        <label>
+          Item
+          <select id="stockTransferItem"></select>
+        </label>
+        <label>
+          Transfer Type
+          <select id="stockTransferType">
+            <option value="in">Item In</option>
+            <option value="out">Item Out</option>
+          </select>
+        </label>
+        <label>
+          Quantity
+          <input id="stockTransferQuantity" type="number" min="0.01" step="0.01" required />
+        </label>
+        <div class="receipt-actions">
+          <button class="button accent" type="submit">Send Request</button>
+        </div>
+        <div class="panel-header">
+          <h3>Transfer Entries</h3>
+        </div>
+        <label>
+          Filter By Date
+          <input id="stockTransferDateFilter" type="date" />
+        </label>
+        <div id="stockTransferHistory" class="history-list transfer-page-list"></div>
+      </form>
+    </dialog>
+
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
